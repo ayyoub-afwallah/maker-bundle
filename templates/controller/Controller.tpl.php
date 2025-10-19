@@ -4,6 +4,10 @@ namespace <?= $class_data->getNamespace(); ?>;
 
 <?= $class_data->getUseStatements(); ?>
 
+/**
+* <?= $author_tag ?>
+*
+*/
 <?= $class_data->getClassDeclaration(); ?>
 
 {

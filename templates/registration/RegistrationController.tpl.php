@@ -4,6 +4,10 @@ namespace <?= $namespace; ?>;
 
 <?= $use_statements; ?>
 
+/**
+* <?= $author_tag ?>
+*
+*/
 class <?= $class_name; ?> extends AbstractController
 {
 <?php if ($will_verify_email): ?>

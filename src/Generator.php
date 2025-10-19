@@ -60,6 +60,8 @@ class Generator
             $className = $classData->getFullClassName();
         }
 
+        $variables['author_tag'] = $this->getGitAuthorTag();
+
         $targetPath = $this->fileManager->getRelativePathForFutureClass($className);
 
         if (null === $targetPath) {
@@ -93,6 +95,7 @@ class Generator
      */
     final public function generateClassFromClassData(ClassData $classData, string $templateName, array $variables = [], bool $isController = false): string
     {
+        $variables['author_tag'] = $this->getGitAuthorTag();
         $classData = $this->templateComponentGenerator->configureClass($classData);
         $targetPath = $this->fileManager->getRelativePathForFutureClass($classData->getFullClassName());
 
@@ -337,5 +340,24 @@ class Generator
         );
 
         return $templatePath;
+    }
+
+    /**
+     * Get Git author tag from git config
+     *
+     * @return string|null The author tag or null if git user.name is not configured
+     */
+    function getGitAuthorTag(): ?string
+    {
+        $name = shell_exec('git config --get user.name 2>/dev/null');
+        if (empty($name)) {
+            return null;
+        }
+
+        $name = trim($name);
+        $email = trim(shell_exec('git config --get user.email 2>/dev/null') ?? '');
+
+        // Return WITHOUT the leading " * " - let the template handle it
+        return '@author ' . $name . ($email ? ' <' . $email . ">\n" : '');
     }
 }

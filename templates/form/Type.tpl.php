@@ -4,6 +4,9 @@ namespace <?= $namespace ?>;
 
 <?= $use_statements; ?>
 
+/**
+* <?= $author_tag ?>
+*/
 class <?= $class_name ?> extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

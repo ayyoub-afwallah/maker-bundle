@@ -7,6 +7,9 @@ use Symfony\Bundle\MakerBundle\Maker\Common\EntityIdTypeEnum;
 
 namespace <?= $namespace ?>;
 
+/**
+* <?= $author_tag ?>
+*/
 <?= $use_statements; ?>
 
 #[ORM\Entity(repositoryClass: <?= $repository_class_name ?>::class)]
