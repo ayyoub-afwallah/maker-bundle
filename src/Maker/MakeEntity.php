@@ -292,7 +292,7 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
 
                         break;
                     default:
-                        throw new \Exception('Invalid relation type');
+                        throw new \Exception('Invalid relation type.');
                 }
 
                 // save the inverse side if it's being mapped
@@ -454,24 +454,33 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
                 'text' => [],
                 'boolean' => [],
                 'integer' => ['smallint', 'bigint'],
-                'float' => [],
+                'float' => ['smallfloat'],
+                'decimal' => [],
+                'number' => [],
             ],
             'array_object' => [
                 'array' => ['simple_array'],
-                'json' => [],
+                'json' => ['json_object'],
                 'object' => [],
                 'binary' => [],
                 'blob' => [],
+                'json_b' => ['jsonb_object'],
             ],
             'date_time' => [
                 'datetime' => ['datetime_immutable'],
                 'datetimetz' => ['datetimetz_immutable'],
                 'date' => ['date_immutable'],
-                'time' => ['time_immutable'],
+                'date_point' => [],
                 'dateinterval' => [],
+                'day_point' => [],
+                'time' => ['time_immutable'],
+                'time_point' => [],
             ],
             'other' => [
                 'enum' => [],
+                'uuid' => [],
+                'guid' => [],
+                'ulid' => [],
             ],
         ];
 
