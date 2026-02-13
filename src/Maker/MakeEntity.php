@@ -294,7 +294,7 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
 
                         break;
                     default:
-                        throw new \Exception('Invalid relation type');
+                        throw new \Exception('Invalid relation type.');
                 }
 
                 // save the inverse side if it's being mapped
