@@ -31,6 +31,7 @@ use Symfony\Bundle\MakerBundle\Util\ClassDetails;
 use Symfony\Bundle\MakerBundle\Util\ClassSource\Model\ClassProperty;
 use Symfony\Bundle\MakerBundle\Util\ClassSourceManipulator;
 use Symfony\Bundle\MakerBundle\Util\CliOutputHelper;
+use Symfony\Bundle\MakerBundle\Util\EnumHelper;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Bundle\MercureBundle\DependencyInjection\MercureExtension;
 use Symfony\Component\Console\Command\Command;
@@ -56,6 +57,7 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
     public function __construct(
         private FileManager $fileManager,
         private DoctrineHelper $doctrineHelper,
+        private EnumHelper $enumHelper,
         ?string $projectDirectory = null,
         ?Generator $generator = null,
         ?EntityClassGenerator $entityClassGenerator = null,
@@ -431,7 +433,7 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
             $classProperty->scale = $io->ask('Scale (number of decimals to store: 100.00 would be 2)', '0', Validator::validateScale(...));
         } elseif ('enum' === $type) {
             // ask for valid backed enum class
-            $classProperty->enumType = $io->ask('Enum class', null, Validator::classIsBackedEnum(...));
+            $classProperty->enumType = $this->askEnumDetails($io);
 
             // set type according to user decision
             $classProperty->type = $io->confirm('Can this field store multiple enum values', false) ? 'simple_array' : 'string';
@@ -552,6 +554,39 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
         $question = new Question($questionText);
         $question->setValidator(Validator::notBlank(...));
         $question->setAutocompleterValues($this->doctrineHelper->getEntitiesForAutocomplete());
+
+        return $question;
+    }
+
+    private function askEnumDetails(ConsoleStyle $io): string
+    {
+        $targetEnumClass = null;
+        while (null === $targetEnumClass) {
+            $question = $this->createEnumQuestion('Enum class (e.g. <fg=yellow>App\Enum\Foo</>):');
+
+            $answeredEnumClass = $io->askQuestion($question);
+
+            // find the correct class name - but give priority over looking
+            // in the Entity namespace versus just checking the full class
+            // name to avoid issues with classes like "Directory" that exist
+            // in PHP's core.
+            if (class_exists($this->getEntityNamespace() . '\\' . $answeredEnumClass)) {
+                $targetEnumClass = $this->getEntityNamespace() . '\\' . $answeredEnumClass;
+            } elseif (class_exists($answeredEnumClass)) {
+                $targetEnumClass = $answeredEnumClass;
+            } else {
+                $io->error(\sprintf('Unknown class "%s"', $answeredEnumClass));
+            }
+        }
+
+        return $targetEnumClass;
+    }
+
+    private function createEnumQuestion(string $questionText): Question
+    {
+        $question = new Question($questionText);
+        $question->setValidator(Validator::classIsBackedEnum(...));
+        $question->setAutocompleterValues($this->enumHelper->getAllEnums());
 
         return $question;
     }

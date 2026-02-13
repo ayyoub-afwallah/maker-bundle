@@ -24,6 +24,7 @@ use Symfony\Bundle\MakerBundle\Security\SecurityControllerBuilder;
 use Symfony\Bundle\MakerBundle\Security\UserClassBuilder;
 use Symfony\Bundle\MakerBundle\Util\AutoloaderUtil;
 use Symfony\Bundle\MakerBundle\Util\ComposerAutoloaderFinder;
+use Symfony\Bundle\MakerBundle\Util\EnumHelper;
 use Symfony\Bundle\MakerBundle\Util\MakerFileLinkFormatter;
 use Symfony\Bundle\MakerBundle\Util\PhpCompatUtil;
 use Symfony\Bundle\MakerBundle\Util\TemplateComponentGenerator;
@@ -60,6 +61,11 @@ return static function (ContainerConfigurator $container) {
         ->args([
             '',
             service('doctrine')->ignoreOnInvalid(),
+        ]);
+
+    $services->set('maker.enum_helper', EnumHelper::class)
+        ->args([
+            service('maker.file_manager'),
         ]);
 
     $services->set('maker.template_linter', TemplateLinter::class)
