@@ -570,8 +570,8 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
             // in the Entity namespace versus just checking the full class
             // name to avoid issues with classes like "Directory" that exist
             // in PHP's core.
-            if (class_exists($this->getEntityNamespace() . '\\' . $answeredEnumClass)) {
-                $targetEnumClass = $this->getEntityNamespace() . '\\' . $answeredEnumClass;
+            if (class_exists($this->getEntityNamespace().'\\'.$answeredEnumClass)) {
+                $targetEnumClass = $this->getEntityNamespace().'\\'.$answeredEnumClass;
             } elseif (class_exists($answeredEnumClass)) {
                 $targetEnumClass = $answeredEnumClass;
             } else {
