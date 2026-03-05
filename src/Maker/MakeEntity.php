@@ -562,20 +562,14 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
     {
         $targetEnumClass = null;
         while (null === $targetEnumClass) {
-            $question = $this->createEnumQuestion('Enum class (e.g. <fg=yellow>App\Enum\Foo</>):');
+            $question = $this->createEnumQuestion('Enum class (e.g. <fg=yellow>App\Enum\Foo</>)');
 
             $answeredEnumClass = $io->askQuestion($question);
 
-            // find the correct class name - but give priority over looking
-            // in the Entity namespace versus just checking the full class
-            // name to avoid issues with classes like "Directory" that exist
-            // in PHP's core.
-            if (class_exists($this->getEntityNamespace().'\\'.$answeredEnumClass)) {
-                $targetEnumClass = $this->getEntityNamespace().'\\'.$answeredEnumClass;
-            } elseif (class_exists($answeredEnumClass)) {
+            if (enum_exists($answeredEnumClass)) {
                 $targetEnumClass = $answeredEnumClass;
             } else {
-                $io->error(\sprintf('Unknown class "%s"', $answeredEnumClass));
+                $io->error(\sprintf('Unknown enum "%s"', $answeredEnumClass));
             }
         }
 
