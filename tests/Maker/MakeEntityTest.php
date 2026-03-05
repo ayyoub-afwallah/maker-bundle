@@ -715,6 +715,26 @@ class MakeEntityTest extends MakerTestCase
                 self::runEntityTest($runner);
             }),
         ];
+        
+        yield 'it_cannot_create_a_new_class_with_fake_enum_field' => [self::createMakeEntityTest()
+            ->run(static function (MakerTestRunner $runner) {
+                $output = $runner->runMaker([
+                    // entity class name
+                    'User',
+                    // add additional field
+                    'fakeEnum',
+                    'enum',
+                    'App\\Enum\\Fake',
+                    '',
+                    // nullable
+                    'y',
+                    // finish adding fields
+                    '',
+                ], '', true);
+
+                self::assertStringContainsString('Class "App\Enum\Fake" doesn\'t exist', $output);
+            }),
+        ];
 
         yield 'it_creates_a_new_class_with_enum_field_multiple_and_nullable' => [self::createMakeEntityTest()
         ->run(static function (MakerTestRunner $runner) {
