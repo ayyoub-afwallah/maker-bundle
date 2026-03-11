@@ -53,14 +53,15 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
 
     private Generator $generator;
     private EntityClassGenerator $entityClassGenerator;
+    private EnumHelper $enumHelper;
 
     public function __construct(
         private FileManager $fileManager,
         private DoctrineHelper $doctrineHelper,
-        private EnumHelper $enumHelper,
         ?string $projectDirectory = null,
         ?Generator $generator = null,
         ?EntityClassGenerator $entityClassGenerator = null,
+        EnumHelper $enumHelper = null,
     ) {
         if (null !== $projectDirectory) {
             @trigger_error('The $projectDirectory constructor argument is no longer used since 1.41.0', \E_USER_DEPRECATED);
@@ -79,6 +80,8 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
         } else {
             $this->entityClassGenerator = $entityClassGenerator;
         }
+
+        $this->enumHelper = $enumHelper;
     }
 
     public static function getCommandName(): string
@@ -580,7 +583,9 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
     {
         $question = new Question($questionText);
         $question->setValidator(Validator::classIsBackedEnum(...));
-        $question->setAutocompleterValues($this->enumHelper->getAllEnums());
+        if ($this->enumHelper) {
+            $question->setAutocompleterValues($this->enumHelper->getAllEnums());
+        }
 
         return $question;
     }

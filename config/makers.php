@@ -77,10 +77,10 @@ return static function (ContainerConfigurator $container) {
         ->args([
             service('maker.file_manager'),
             service('maker.doctrine_helper'),
-            service('maker.enum_helper'),
             null,
             service('maker.generator'),
             service('maker.entity_class_generator'),
+            service('maker.enum_helper'),
         ])
         ->tag('maker.command');
 
