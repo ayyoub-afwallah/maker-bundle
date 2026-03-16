@@ -712,7 +712,8 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                self::runEntityTest($runner);
+                self::runCustomTest($runner, 'it_finds_enums.php');
+                // self::runEntityTest($runner);
             }),
         ];
 
