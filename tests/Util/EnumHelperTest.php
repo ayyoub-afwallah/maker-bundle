@@ -32,7 +32,7 @@ class EnumHelperTest extends TestCase
         $this->classLoader?->unregister();
     }
 
-    public function testGetAllEnumsReturnsEnumClasses(): void
+    public function testGetAllEnumsReturnsEnumClasses()
     {
         $enumHelper = new EnumHelper($this->fixturesDir.'/src', 'App');
         $enums = $enumHelper->getAllEnums();
@@ -42,7 +42,7 @@ class EnumHelperTest extends TestCase
         $this->assertContains('App\\Enum\\Priority', $enums);
     }
 
-    public function testGetAllEnumsExcludesNonEnumClasses(): void
+    public function testGetAllEnumsExcludesNonEnumClasses()
     {
         $enumHelper = new EnumHelper($this->fixturesDir.'/src', 'App');
         $enums = $enumHelper->getAllEnums();
@@ -50,7 +50,7 @@ class EnumHelperTest extends TestCase
         $this->assertNotContains('App\\Entity\\User', $enums);
     }
 
-    public function testGetAllEnumsReturnsEmptyArrayWhenSrcDirDoesNotExist(): void
+    public function testGetAllEnumsReturnsEmptyArrayWhenSrcDirDoesNotExist()
     {
         $enumHelper = new EnumHelper(__DIR__.'/nonexistent', 'App');
         $enums = $enumHelper->getAllEnums();
@@ -59,4 +59,3 @@ class EnumHelperTest extends TestCase
         $this->assertEmpty($enums);
     }
 }
-
