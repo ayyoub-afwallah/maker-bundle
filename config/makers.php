@@ -80,7 +80,6 @@ return static function (ContainerConfigurator $container) {
             null,
             service('maker.generator'),
             service('maker.entity_class_generator'),
-            service('maker.enum_helper'),
         ])
         ->tag('maker.command');
 

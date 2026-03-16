@@ -13,7 +13,6 @@ namespace Symfony\Bundle\MakerBundle\Tests\Util;
 
 use Composer\Autoload\ClassLoader;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Bundle\MakerBundle\Util\EnumHelper;
 
 class EnumHelperTest extends TestCase
@@ -35,11 +34,7 @@ class EnumHelperTest extends TestCase
 
     public function testGetAllEnumsReturnsEnumClasses(): void
     {
-        $fileManager = $this->createMock(FileManager::class);
-        $fileManager->method('getRootDirectory')
-            ->willReturn($this->fixturesDir);
-
-        $enumHelper = new EnumHelper($fileManager);
+        $enumHelper = new EnumHelper($this->fixturesDir.'/src', 'App');
         $enums = $enumHelper->getAllEnums();
 
         $this->assertCount(2, $enums);
@@ -49,11 +44,7 @@ class EnumHelperTest extends TestCase
 
     public function testGetAllEnumsExcludesNonEnumClasses(): void
     {
-        $fileManager = $this->createMock(FileManager::class);
-        $fileManager->method('getRootDirectory')
-            ->willReturn($this->fixturesDir);
-
-        $enumHelper = new EnumHelper($fileManager);
+        $enumHelper = new EnumHelper($this->fixturesDir.'/src', 'App');
         $enums = $enumHelper->getAllEnums();
 
         $this->assertNotContains('App\\Entity\\User', $enums);
@@ -61,11 +52,7 @@ class EnumHelperTest extends TestCase
 
     public function testGetAllEnumsReturnsEmptyArrayWhenSrcDirDoesNotExist(): void
     {
-        $fileManager = $this->createMock(FileManager::class);
-        $fileManager->method('getRootDirectory')
-            ->willReturn(__DIR__.'/nonexistent');
-
-        $enumHelper = new EnumHelper($fileManager);
+        $enumHelper = new EnumHelper(__DIR__.'/nonexistent', 'App');
         $enums = $enumHelper->getAllEnums();
 
         $this->assertIsArray($enums);

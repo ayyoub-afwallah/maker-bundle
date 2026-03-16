@@ -11,14 +11,18 @@
 
 namespace Symfony\Bundle\MakerBundle\Util;
 
-use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * @internal
+ */
 class EnumHelper
 {
-    public function __construct(private FileManager $fileManager)
-    {
+    public function __construct(
+        private string $directory,
+        private string $namespace = 'App',
+    ) {
     }
 
     public function getAllEnums(): array
@@ -26,18 +30,18 @@ class EnumHelper
         $enums = [];
         $finder = new Finder();
 
-        // Check all PHP files in src/ folder
+        // Check all PHP files in the directory
         try {
             $finder->files()
-                ->in($this->fileManager->getRootDirectory().'/src')
+                ->in($this->directory)
                 ->name('*.php');
         } catch (DirectoryNotFoundException $e) {
             return [];
         }
 
         foreach ($finder as $file) {
-            $relativePath = str_replace([$this->fileManager->getRootDirectory().'/src/', '.php'], ['', ''], $file);
-            $className = 'App\\'.str_replace('/', '\\', $relativePath);
+            $relativePath = str_replace([$this->directory.'/', '.php'], ['', ''], $file->getRealPath());
+            $className = $this->namespace.'\\'.str_replace('/', '\\', $relativePath);
 
             if (enum_exists($className)) {
                 $enums[] = $className;

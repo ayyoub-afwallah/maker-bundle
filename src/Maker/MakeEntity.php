@@ -60,7 +60,6 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
         ?string $projectDirectory = null,
         ?Generator $generator = null,
         ?EntityClassGenerator $entityClassGenerator = null,
-        private ?EnumHelper $enumHelper = null,
     ) {
         if (null !== $projectDirectory) {
             @trigger_error('The $projectDirectory constructor argument is no longer used since 1.41.0', \E_USER_DEPRECATED);
@@ -580,9 +579,9 @@ final class MakeEntity extends AbstractMaker implements InputAwareMakerInterface
     {
         $question = new Question($questionText);
         $question->setValidator(Validator::classIsBackedEnum(...));
-        if ($this->enumHelper) {
-            $question->setAutocompleterValues($this->enumHelper->getAllEnums());
-        }
+
+        $enumHelper = new EnumHelper($this->fileManager->getRootDirectory().'/src', 'App');
+        $question->setAutocompleterValues($enumHelper->getAllEnums());
 
         return $question;
     }
