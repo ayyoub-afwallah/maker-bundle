@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\MakerBundle\Tests\Maker;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\MakerBundle\Maker\MakeEntity;
 use Symfony\Bundle\MakerBundle\Test\MakerTestCase;
 use Symfony\Bundle\MakerBundle\Test\MakerTestDetails;
@@ -712,8 +713,7 @@ class MakeEntityTest extends MakerTestCase
                     '',
                 ]);
 
-                self::runCustomTest($runner, 'it_finds_enums.php');
-                // self::runEntityTest($runner);
+                self::runEntityTest($runner);
             }),
         ];
 
