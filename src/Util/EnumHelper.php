@@ -12,6 +12,7 @@
 namespace Symfony\Bundle\MakerBundle\Util;
 
 use Symfony\Bundle\MakerBundle\FileManager;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 
 class EnumHelper
@@ -26,9 +27,13 @@ class EnumHelper
         $finder = new Finder();
 
         // Check all PHP files in src/ folder
-        $finder->files()
-            ->in($this->fileManager->getRootDirectory().'/src')
-            ->name('*.php');
+        try {
+            $finder->files()
+                ->in($this->fileManager->getRootDirectory().'/src')
+                ->name('*.php');
+        } catch (DirectoryNotFoundException $e) {
+            return [];
+        }
 
         foreach ($finder as $file) {
             $relativePath = str_replace([$this->fileManager->getRootDirectory().'/src/', '.php'], ['', ''], $file);
