@@ -23,6 +23,7 @@ class EnumHelper
         private string $directory,
         private string $namespace = 'App',
     ) {
+        $this->directory = str_replace(['/', '\\'], \DIRECTORY_SEPARATOR, $directory);
     }
 
     public function getAllEnums(): array
@@ -40,7 +41,7 @@ class EnumHelper
         }
 
         foreach ($finder as $file) {
-            $relativePath = str_replace([$this->directory.'/', '.php'], ['', ''], $file->getRealPath());
+            $relativePath = str_replace([$this->directory.\DIRECTORY_SEPARATOR, '.php'], ['', ''], $file->getRealPath());
             $className = $this->namespace.'\\'.str_replace('/', '\\', $relativePath);
 
             if (enum_exists($className)) {
